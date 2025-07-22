@@ -1,24 +1,21 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id("java")
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17"
-    id("io.github.goooler.shadow") version "8.1.8"
+    kotlin("jvm") version "1.9.20"
+    id("io.papermc.paperweight.userdev")
 }
 
-repositories {
-    maven("https://repo.papermc.io/repository/maven-public/")
-}
+val serverVersion = "1.21.5-R0.1-SNAPSHOT"
+
 
 dependencies {
+    paperweight.paperDevBundle(serverVersion)
     compileOnly(project(":core"))
-    paperweight.paperDevBundle("1.21.7-R0.1-SNAPSHOT")
 }
 
-tasks {
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-    }
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-} 
+class NMSVersion(val nmsVersion: String, val serverVersion: String)
+infix fun String.toNms(that: String): NMSVersion = NMSVersion(this, that)
